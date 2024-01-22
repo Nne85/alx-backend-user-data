@@ -4,7 +4,6 @@ Returns Log Message
 """
 
 import re
-import logging
 from typing import List
 
 
@@ -24,9 +23,8 @@ def filter_datum(fields: List[str], redaction: str,
     Returns:
         str: The obfuscated log message.
     """
-    for field in fields:
-        message = re.sub(fr'({field})=[^;]+', f'{field}={redaction}', message)
-    return message
+    pattern = rf"(?<={separator})({'|'.join(fields)})=(.*?)(?={separator})"
+    return re.sub(pattern, lambda m: f"{m.group(1)}={redaction}", message)
 
 
 if __name__ == "__main__":
