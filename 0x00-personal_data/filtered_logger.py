@@ -30,18 +30,6 @@ def filter_datum(fields: List[str], redaction: str,
     return re.sub(pattern, lambda m: f"{m.group(1)}={redaction}", message)
 
 
-def get_logger() -> logging.Logger:
-    """Creates a new logger for user data.
-    """
-    logger = logging.getLogger("user_data")
-    stream_handler = logging.StreamHandler()
-    stream_handler.setFormatter(RedactingFormatter(PII_FIELDS))
-    logger.setLevel(logging.INFO)
-    logger.propagate = False
-    logger.addHandler(stream_handler)
-    return logger
-
-
 class RedactingFormatter(logging.Formatter):
     """ Redacting Formatter class
         """
@@ -60,6 +48,18 @@ class RedactingFormatter(logging.Formatter):
         msg = super(RedactingFormatter, self).format(record)
         text = filter_datum(self.fields, self.REDACTION, msg, self.SEPARATOR)
         return text
+
+def get_logger() -> logging.Logger:
+    """  returns a logging.Logger object. """
+    logger = logging.getLogger('user_data')
+    logger.setLevel(logging.INFO)
+    logger.propagate = False
+    handler = logging.StreamHandler()
+    formatter = RedactingFormatter(fields=PII_FIELDS)
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
+    return logger
 
 
 if __name__ == "__main__":
