@@ -45,7 +45,6 @@ class Auth:
         """
         authorization_header
         """
-        print(request)
         if request is None:
             return None
 
