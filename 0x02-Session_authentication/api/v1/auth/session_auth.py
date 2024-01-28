@@ -1,45 +1,69 @@
 #!/usr/bin/env python3
-""" Session class that inherits from Auth Class"""
+"""
+Module for authentication using Session auth
+"""
 
-from api.v1.auth.auth import Auth
-import uuid
+
+from .auth import Auth
+
 from models.user import User
+from uuid import uuid4
 
 
 class SessionAuth(Auth):
-    """ Class SessionAuth"""
+    """_summary_
+    """
     user_id_by_session_id = {}
 
     def create_session(self, user_id: str = None) -> str:
-        """ creates user session"""
+        """_summary_
+
+        Args:
+            user_id (str, optional): _description_. Defaults to None.
+
+        Returns:
+            str: _description_
+        """
         if user_id is None or not isinstance(user_id, str):
             return None
 
-        session_id = str(uuid.uuid4())
-        self.user_id_by_session_id[session_id] = user_id
-        return session_id
+        id = uuid4()
+        self.user_id_by_session_id[str(id)] = user_id
+        return str(id)
 
     def user_id_for_session_id(self, session_id: str = None) -> str:
-        """ returns a User ID based on a Session ID"""
+        """_summary_
+
+        Args:
+            session_id (str, optional): _description_. Defaults to None.
+
+        Returns:
+                str: _description_
+        """
         if session_id is None or not isinstance(session_id, str):
             return None
-
         return self.user_id_by_session_id.get(session_id)
 
     def current_user(self, request=None):
-        """ overload) that returns a User instance based on a cookie value:"""
-        session_cookie = self.session_cookie(request)
-        if session_cookie is None:
-            return None
-        user_id = self.user_id_for_session_id(session_cookie)
-        if user_id is None:
-            return None
+        """_summary_
 
+        Args:
+            request (_type_, optional): _description_. Defaults to None.
+        """
+        session_cookie = self.session_cookie(request)
+        user_id = self.user_id_for_session_id(session_cookie)
         user = User.get(user_id)
         return user
 
     def destroy_session(self, request=None):
-        """ deletes the user session / logout"""
+        """_summary_
+
+        Args:
+            request (_type_, optional): _description_. Defaults to None.
+
+        Returns:
+            _type_: _description_
+        """
         if request is None:
             return False
         session_cookie = self.session_cookie(request)
