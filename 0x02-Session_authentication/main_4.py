@@ -14,6 +14,15 @@ user.email = user_email
 user.password = user_clear_pwd
 user.save()
 
+""" Create a user test """
+user_email = "taylorsession@hbtn.io"
+user_clear_pwd = "real pwd"
+
+user = User()
+user.email = user_email
+user.password = user_clear_pwd
+user.save()
+
 """ Create a session ID """
 sa = SessionAuth()
 session_id = sa.create_session(user.id)
