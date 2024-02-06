@@ -16,7 +16,7 @@ def register_user() -> str:
 
 
 @app.route('/users', methods=['POST'])
-def users():
+def register_users():
     """Registers a new user if it does not exist before"""
     try:
         email = request.form['email']
@@ -32,7 +32,7 @@ def users():
 
 
 @app.route('/sessions', methods=['POST'])
-def login() -> str:
+def log_in() -> str:
     """ login with email and password"""
     try:
         email = request.form['email']
