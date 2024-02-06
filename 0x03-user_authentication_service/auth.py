@@ -6,6 +6,7 @@ import bcrypt
 from typing import Union
 from user import User
 from db import DB
+from uuid import uuid4
 
 
 def _hash_password(password: str) -> bytes:
@@ -20,6 +21,11 @@ def _hash_password(password: str) -> bytes:
     salt = bcrypt.gensalt()
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
     return hashed_password
+
+
+def _generate_uuid(uuid: str) -> str:
+    """ generates a uuid str"""
+    return str(uuid4)
 
 
 class Auth:
